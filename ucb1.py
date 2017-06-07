@@ -8,22 +8,40 @@ import operator
 
 import random
 class UCB1():
-    def __init__(self, num_players, num_actions):
+    def __init__(self, num_players, num_actions,initorder):
         #self.k = k
         #self.numdrivers=len(drivers)
         self.num_players = num_players
         self.num_actions = num_actions
-        self.number_plays = [[0]*self.num_actions]*self.num_players
-        self.means = [[0.0]*self.num_actions]*self.num_players
+        self.init_order = initorder
         self.round = [0]*self.num_players
         self.actions = {}
-        for dinx in range(self.num_players):
-            self.actions[dinx] = []
-    ##returns the route id the driver choosed
-    def choseActionDriver(self, dInx):
-        self.round[dInx] += 1
+     	self.number_plays = []
+        self.means = []
+        for d in range(self.num_players):
+            self.number_plays.append([0]*num_actions)
+            self.means.append([0.0]*num_actions)
+            self.actions[d] = []
 
+    def reset(self):
+        self.round = [0]*self.num_players
+        self.actions = {}
+     	self.number_plays = []
+        self.means = []
+        for d in range(self.num_players):
+            self.number_plays.append([0]*self.num_actions)
+            self.means.append([0.0]*self.num_actions)
+            self.actions[d] = []
+        
+
+    ##returns the route id the driver choosed
+    def chooseActionDriver(self, dInx):
+        self.round[dInx] += 1
+        #initialization
         if (self.round[dInx] <= self.num_actions):
+            if(self.init_order == 2):
+                self.number_plays[dInx][self.round[dInx]-1] += 1
+                return self.round[dInx]-1
             ##plays each arm once in a random order
             possible_actions = []
             for k in range(self.num_actions):
@@ -33,6 +51,8 @@ class UCB1():
             self.number_plays[dInx][choice] += 1
             return choice
         else:  # regular case
+            for a in range(self.num_actions):
+              assert(self.number_plays[dInx][a] > 0)
             choice_value = [0.0] * self.num_actions
             for i, u in enumerate(self.means[dInx]):
                 choice_value[i] = u + math.sqrt((2.0 * math.log(self.round[dInx])) / self.number_plays[dInx][i])

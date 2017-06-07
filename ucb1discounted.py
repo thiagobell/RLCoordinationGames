@@ -9,33 +9,46 @@ import operator
 import random
 import sys
 class UCB1Discounted():
-    def __init__(self, num_player,k, discount_factor):
+    def __init__(self, num_player,k, discount_factor,init_order):
         self.k = k
         self.numdrivers=num_player
         self.discount_factor = discount_factor
-        self.rewards = []
         self.rewardUpperBound = 1##upper bound on rewards. needed for algorithm
         self.episode = 0
-        self.xi = 0.8
-        self.rewards ={} #indexed by driver id. value is list of rewards ordered in chronological order
-        self.actions = {} #same as above for actions taken
+        self.init_order = init_order
+        self.xi = 2.0
+        self.rewards =[] #indexed by driver id. value is list of rewards ordered in chronological order
+        self.actions = [] #same as above for actions taken
 
         for dinx in range(self.numdrivers):
-            self.rewards[dinx] = []
-            self.actions[dinx] = []
+            self.rewards.append([])
+            self.actions.append([])
+
+    def reset(self):
+        self.episode = 0
+        self.rewards =[] #indexed by driver id. value is list of rewards ordered in chronological order
+        self.actions = [] #same as above for actions taken
+        for dinx in range(self.numdrivers):
+            self.rewards.append([])
+            self.actions.append([])
+        
 
 
     ##returns the route id the driver choosed
-    def choseActionDriver(self, dInx):
+    def chooseActionDriver(self, dInx):
         self.episode = len(self.rewards[dInx])+1
         if (len(self.actions[dInx]) < self.k):
-            ##plays each arm once in a random order
-            possible_actions = []
-            for k in range(self.k):
-                if k not in self.actions[dInx]:
-                    possible_actions.append(k)
-            return random.choice(possible_actions)
-            #return len(self.actions[dInx])
+            if self.init_order == 1:
+                ##plays each arm once in a random order
+                possible_actions = []
+                for k in range(self.k):
+                    if k not in self.actions[dInx]:
+                        possible_actions.append(k)
+                return random.choice(possible_actions)
+            elif self.init_order:
+                return len(self.actions[dInx])
+            else:
+                raise "invalid init order"
         else:  # regular case
 
             Xs = [0.0]*self.k
