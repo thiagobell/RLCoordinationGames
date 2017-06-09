@@ -3,6 +3,7 @@
 from ucb1discounted import UCB1Discounted
 from ucb1 import UCB1
 from ucb1window import UCB1Window
+from thompson import Thompson
 import random
 from game import Game
 
@@ -34,9 +35,11 @@ sequentialinit = 2
 ucb = UCB1(2,num_actions,1)
 ucbdiscount = UCB1Discounted(2,num_actions,0.8, sequentialinit) 
 ucbwin = UCB1Window(2, game.num_actions_col, 0.99,50,game.max_reward,2)
+thomp = Thompson(2, game.num_actions_col)
 print 'ucb1:', play_game(game, ucb, 100, 100)
 print 'ucb1discount:', play_game(game, ucbdiscount, 100, 10)
 print 'ucb1window:', play_game(game, ucbwin, 100, 100)
+print 'thompson', play_game(game, thomp, 100, 100)
 
 
 #print ["%.2f"%x for x in ]
