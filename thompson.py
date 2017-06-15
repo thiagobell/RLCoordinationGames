@@ -9,7 +9,7 @@ import warnings
 import random
 
 class Thompson:
-    def __init__(self, num_players, num_actions, optimistic = false):
+    def __init__(self, num_players, num_actions, optimistic = False):
         self.num_actions = num_actions
         self.num_drivers = num_players
         self.observations = [] # key: agent{ key:arm, value:[reward]}
