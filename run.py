@@ -4,6 +4,7 @@ from ucb1discounted import UCB1Discounted
 from ucb1 import UCB1
 from ucb1window import UCB1Window
 from thompson import Thompson
+from rexp3 import Rexp3
 import random
 from game import Game
 
@@ -41,6 +42,8 @@ ucbwin_seq = UCB1Window(2, game.num_actions_col, 0.99,50,game.max_reward,sequent
 ucbwin_ran = UCB1Window(2, game.num_actions_col, 0.99,50,game.max_reward, randominit)
 thomp_non_opt = Thompson(2, game.num_actions_col,False)
 thomp_optimistic= Thompson(2, game.num_actions_col, True)
+####### Rexp3(num_players, num_actions, epoch_size, gamma)
+rexp3 = Rexp3(2, game.num_actions_col, 101, 0.99)
 results =[]
 
 results.append(['ucb1 sequential init:'] + play_game(game, ucb_seq, 100, 100))
@@ -51,6 +54,7 @@ results.append(['ucb1window sequential init:'] + play_game(game, ucbwin_seq, 100
 results.append(['ucb1window random init:'] + play_game(game, ucbwin_ran, 100, 100))
 results.append(['thompson non optimistic']+ play_game(game, thomp_non_opt, 100, 100))
 results.append(['thompson optimistic:'] +play_game(game, thomp_optimistic, 100, 100))
+results.append(['rexp3 gamma=0.99:'] +play_game(game, rexp3, 100, 100))
 
 output = open("out.csv",'w')
 for ep in range(101):
